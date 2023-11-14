@@ -29,9 +29,18 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
     _model = createModel(context, () => RegistrarModel());
 
     _model.campoNomeController ??= TextEditingController();
+    _model.campoNomeFocusNode ??= FocusNode();
+
     _model.campoEmailController ??= TextEditingController();
+    _model.campoEmailFocusNode ??= FocusNode();
+
     _model.campoSenhaController ??= TextEditingController();
+    _model.campoSenhaFocusNode ??= FocusNode();
+
     _model.campoConfSenhaController ??= TextEditingController();
+    _model.campoConfSenhaFocusNode ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -43,8 +52,21 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
+    context.watch<FFAppState>();
+
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFEF6C09),
@@ -83,10 +105,10 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                   context: context,
                   desktop: false,
                 ))
-                  Flexible(
+                  Expanded(
                     child: Container(
                       width: MediaQuery.sizeOf(context).width * 1.0,
-                      height: MediaQuery.sizeOf(context).height * 0.2,
+                      height: MediaQuery.sizeOf(context).height * 1.0,
                       decoration: BoxDecoration(
                         color: Color(0xFFEF6C09),
                       ),
@@ -120,7 +142,7 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                 ))
                   Container(
                     width: MediaQuery.sizeOf(context).width * 1.0,
-                    height: MediaQuery.sizeOf(context).height * 0.8,
+                    height: MediaQuery.sizeOf(context).height * 0.77,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                       borderRadius: BorderRadius.only(
@@ -144,9 +166,10 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                               alignment: AlignmentDirectional(0.00, 0.00),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 40.0, 24.0, 5.0),
+                                    24.0, 40.0, 24.0, 0.0),
                                 child: TextFormField(
                                   controller: _model.campoNomeController,
+                                  focusNode: _model.campoNomeFocusNode,
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.campoNomeController',
                                     Duration(milliseconds: 2000),
@@ -241,9 +264,10 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                               alignment: AlignmentDirectional(0.00, 0.00),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 30.0, 24.0, 10.0),
+                                    24.0, 20.0, 24.0, 0.0),
                                 child: TextFormField(
                                   controller: _model.campoEmailController,
+                                  focusNode: _model.campoEmailFocusNode,
                                   onChanged: (_) => EasyDebounce.debounce(
                                     '_model.campoEmailController',
                                     Duration(milliseconds: 2000),
@@ -335,9 +359,10 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                               alignment: AlignmentDirectional(0.00, 0.00),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 25.0, 24.0, 10.0),
+                                    24.0, 20.0, 24.0, 0.0),
                                 child: TextFormField(
                                   controller: _model.campoSenhaController,
+                                  focusNode: _model.campoSenhaFocusNode,
                                   obscureText: !_model.campoSenhaVisibility,
                                   decoration: InputDecoration(
                                     labelStyle:
@@ -422,9 +447,10 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                               alignment: AlignmentDirectional(0.00, 0.00),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 25.0, 24.0, 10.0),
+                                    24.0, 20.0, 24.0, 0.0),
                                 child: TextFormField(
                                   controller: _model.campoConfSenhaController,
+                                  focusNode: _model.campoConfSenhaFocusNode,
                                   obscureText: !_model.campoConfSenhaVisibility,
                                   decoration: InputDecoration(
                                     labelStyle: FlutterFlowTheme.of(context)
@@ -514,7 +540,7 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                               alignment: AlignmentDirectional(0.00, 0.00),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 50.0, 0.0, 0.0),
+                                    0.0, 32.0, 0.0, 0.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
                                     if (_model.formKey.currentState == null ||
@@ -603,7 +629,7 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                             ),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 18.0, 0.0, 0.0),
+                                0.0, 10.0, 0.0, 0.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -620,20 +646,28 @@ class _RegistrarWidgetState extends State<RegistrarWidget> {
                                         fontSize: 16.0,
                                       ),
                                 )),
-                                SelectionArea(
-                                    child: Text(
-                                  'Login',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Readex Pro',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w600,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                )),
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context.pushNamed('Login2');
+                                  },
+                                  child: Text(
+                                    'Login',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w600,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

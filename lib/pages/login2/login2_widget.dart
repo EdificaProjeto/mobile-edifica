@@ -6,7 +6,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'login2_model.dart';
@@ -30,7 +29,12 @@ class _Login2WidgetState extends State<Login2Widget> {
     _model = createModel(context, () => Login2Model());
 
     _model.campoEmailController ??= TextEditingController();
+    _model.campoEmailFocusNode ??= FocusNode();
+
     _model.campoSenhaController ??= TextEditingController();
+    _model.campoSenhaFocusNode ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -42,92 +46,112 @@ class _Login2WidgetState extends State<Login2Widget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Color(0xFFEF6C09),
-        appBar: AppBar(
-          backgroundColor: Color(0xFFEF6C09),
-          automaticallyImplyLeading: false,
-          leading: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30.0,
-            borderWidth: 1.0,
-            buttonSize: 60.0,
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.black,
-              size: 30.0,
-            ),
-            onPressed: () async {
-              context.pushNamed('BemVindo');
-            },
-          ),
-          actions: [],
-          centerTitle: false,
-          elevation: 2.0,
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
         ),
-        body: SafeArea(
-          top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              if (responsiveVisibility(
-                context: context,
-                desktop: false,
-              ))
-                Flexible(
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width * 1.0,
-                    height: MediaQuery.sizeOf(context).height * 0.2,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFEF6C09),
+      );
+    }
+
+    context.watch<FFAppState>();
+
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: Color(0xFFEF6C09),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFEF6C09),
+        automaticallyImplyLeading: false,
+        leading: FlutterFlowIconButton(
+          borderColor: Colors.transparent,
+          borderRadius: 30.0,
+          borderWidth: 1.0,
+          buttonSize: 60.0,
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: Colors.black,
+            size: 30.0,
+          ),
+          onPressed: () async {
+            context.pushNamed('BemVindo');
+          },
+        ),
+        actions: [],
+        centerTitle: false,
+        elevation: 2.0,
+      ),
+      body: Align(
+        alignment: AlignmentDirectional(0.00, 0.00),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (responsiveVisibility(
+              context: context,
+              desktop: false,
+            ))
+              Expanded(
+                child: Container(
+                  width: MediaQuery.sizeOf(context).width * 1.0,
+                  height: MediaQuery.sizeOf(context).height * 1.0,
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.sizeOf(context).width * 1.0,
+                    minHeight: MediaQuery.sizeOf(context).height * 1.0,
+                    maxWidth: MediaQuery.sizeOf(context).width * 1.0,
+                    maxHeight: MediaQuery.sizeOf(context).height * 1.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFEF6C09),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Visibility(
+                    visible: responsiveVisibility(
+                      context: context,
+                      desktop: false,
                     ),
-                    child: Visibility(
-                      visible: responsiveVisibility(
-                        context: context,
-                        desktop: false,
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(-1.00, 0.00),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              25.0, 0.0, 0.0, 0.0),
-                          child: Text(
-                            'Login',
-                            style: FlutterFlowTheme.of(context)
-                                .displaySmall
-                                .override(
-                                  fontFamily: 'Outfit',
-                                  fontSize: 40.0,
-                                ),
-                          ),
+                    child: Align(
+                      alignment: AlignmentDirectional(-1.00, 0.00),
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 0.0),
+                        child: Text(
+                          'Login',
+                          style: FlutterFlowTheme.of(context)
+                              .displaySmall
+                              .override(
+                                fontFamily: 'Outfit',
+                                fontSize: 40.0,
+                              ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              Container(
-                width: MediaQuery.sizeOf(context).width * 1.0,
-                height: MediaQuery.sizeOf(context).height * 0.8,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(0.0),
-                    bottomRight: Radius.circular(0.0),
-                    topLeft: Radius.circular(50.0),
-                    topRight: Radius.circular(50.0),
-                  ),
+              ),
+            Container(
+              width: MediaQuery.sizeOf(context).width * 1.0,
+              height: MediaQuery.sizeOf(context).height * 0.77,
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).secondaryBackground,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(0.0),
+                  bottomRight: Radius.circular(0.0),
+                  topLeft: Radius.circular(50.0),
+                  topRight: Radius.circular(50.0),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    if (responsiveVisibility(
-                      context: context,
-                      desktop: false,
-                    ))
-                      Form(
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  if (responsiveVisibility(
+                    context: context,
+                    desktop: false,
+                  ))
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
+                      child: Form(
                         key: _model.formKey,
                         autovalidateMode: AutovalidateMode.disabled,
                         child: Column(
@@ -144,6 +168,7 @@ class _Login2WidgetState extends State<Login2Widget> {
                                       24.0, 55.0, 24.0, 0.0),
                                   child: TextFormField(
                                     controller: _model.campoEmailController,
+                                    focusNode: _model.campoEmailFocusNode,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.campoEmailController',
                                       Duration(milliseconds: 100),
@@ -219,9 +244,10 @@ class _Login2WidgetState extends State<Login2Widget> {
                                 alignment: AlignmentDirectional(0.00, 1.00),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 40.0, 24.0, 0.0),
+                                      24.0, 20.0, 24.0, 0.0),
                                   child: TextFormField(
                                     controller: _model.campoSenhaController,
+                                    focusNode: _model.campoSenhaFocusNode,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.campoSenhaController',
                                       Duration(milliseconds: 100),
@@ -304,10 +330,6 @@ class _Login2WidgetState extends State<Login2Widget> {
                                     validator: _model
                                         .campoSenhaControllerValidator
                                         .asValidator(context),
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                          RegExp('[0-9]'))
-                                    ],
                                   ),
                                 ),
                               ),
@@ -319,7 +341,7 @@ class _Login2WidgetState extends State<Login2Widget> {
                                 alignment: AlignmentDirectional(0.00, 0.00),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      45.0, 45.0, 45.0, 45.0),
+                                      32.0, 32.0, 32.0, 32.0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
                                       if (_model.formKey.currentState == null ||
@@ -334,6 +356,21 @@ class _Login2WidgetState extends State<Login2Widget> {
                                       );
                                       if ((_model.apiResultxm0?.succeeded ??
                                           true)) {
+                                        setState(() {
+                                          FFAppState().token = LoginCall.token(
+                                            (_model.apiResultxm0?.jsonBody ??
+                                                ''),
+                                          ).toString();
+                                          FFAppState().id = LoginCall.id(
+                                            (_model.apiResultxm0?.jsonBody ??
+                                                ''),
+                                          ).toString();
+                                          FFAppState().nome = LoginCall.nome(
+                                            (_model.apiResultxm0?.jsonBody ??
+                                                ''),
+                                          ).toString();
+                                        });
+
                                         context.pushNamed('TelaHome');
                                       } else {
                                         await showDialog(
@@ -341,7 +378,8 @@ class _Login2WidgetState extends State<Login2Widget> {
                                           builder: (alertDialogContext) {
                                             return AlertDialog(
                                               title: Text('Erro!'),
-                                              content: Text('Login inválido.'),
+                                              content: Text(
+                                                  'Email ou senha inválidos.'),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () =>
@@ -387,140 +425,33 @@ class _Login2WidgetState extends State<Login2Widget> {
                           ],
                         ),
                       ),
-                    Container(
+                    ),
+                  Container(
+                    width: MediaQuery.sizeOf(context).width * 1.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+                    child: Container(
                       width: MediaQuery.sizeOf(context).width * 1.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
                       ),
-                      child: Visibility(
-                        visible: responsiveVisibility(
-                          context: context,
-                          desktop: false,
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional(0.00, 0.00),
-                          child: Text(
-                            'Ou',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  fontSize: 16.0,
-                                ),
-                          ),
-                        ),
-                      ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width * 1.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                        ),
-                        child: Visibility(
-                          visible: responsiveVisibility(
-                            context: context,
-                            desktop: false,
-                          ),
-                          child: Align(
-                            alignment: AlignmentDirectional(0.00, 0.00),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 10.0),
-                              child: FFButtonWidget(
-                                onPressed: () {
-                                  print('btnGoogle pressed ...');
-                                },
-                                text: 'Continuar com Google',
-                                icon: FaIcon(
-                                  FontAwesomeIcons.google,
-                                  color: FlutterFlowTheme.of(context).error,
-                                ),
-                                options: FFButtonOptions(
-                                  width: 280.0,
-                                  height: 50.0,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: Colors.white,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'Readex Pro',
-                                        color: Colors.black,
-                                      ),
-                                  elevation: 3.0,
-                                  borderSide: BorderSide(
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                  ),
+                  Container(
+                    width: MediaQuery.sizeOf(context).width * 1.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
                     ),
-                    Container(
-                      width: MediaQuery.sizeOf(context).width * 1.0,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                      ),
-                      child: Visibility(
-                        visible: responsiveVisibility(
-                          context: context,
-                          tablet: false,
-                          tabletLandscape: false,
-                          desktop: false,
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional(0.00, -1.00),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 8.0, 0.0, 10.0),
-                            child: FFButtonWidget(
-                              onPressed: () {
-                                print('btnFacebook pressed ...');
-                              },
-                              text: 'Continuar com Facebook',
-                              icon: FaIcon(
-                                FontAwesomeIcons.facebook,
-                                color: Color(0xFF3B5998),
-                              ),
-                              options: FFButtonOptions(
-                                width: 280.0,
-                                height: 50.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Colors.white,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      color: Colors.black,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

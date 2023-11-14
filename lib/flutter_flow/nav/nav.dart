@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import '/index.dart';
 import '/main.dart';
@@ -38,7 +39,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       errorBuilder: (context, state) => appStateNotifier.showSplashImage
           ? Builder(
               builder: (context) => Container(
-                color: Color(0xFFEF6C09),
+                color: Color(0xFFFF6C00),
                 child: Image.asset(
                   'assets/images/LogoComFundoLaranja.png',
                   fit: BoxFit.contain,
@@ -53,7 +54,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, _) => appStateNotifier.showSplashImage
               ? Builder(
                   builder: (context) => Container(
-                    color: Color(0xFFEF6C09),
+                    color: Color(0xFFFF6C00),
                     child: Image.asset(
                       'assets/images/LogoComFundoLaranja.png',
                       fit: BoxFit.contain,
@@ -85,7 +86,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'TelaHome',
           path: '/telaHome',
-          builder: (context, params) => TelaHomeWidget(),
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'TelaHome')
+              : TelaHomeWidget(
+                  ferramentas: params.getParam<String>(
+                      'ferramentas', ParamType.String, true),
+                ),
         ),
         FFRoute(
           name: 'Registrar2',
@@ -96,6 +102,59 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'Login2',
           path: '/login2',
           builder: (context, params) => Login2Widget(),
+        ),
+        FFRoute(
+          name: 'ProdutosDetalhados',
+          path: '/produtosDetalhados',
+          builder: (context, params) => ProdutosDetalhadosWidget(
+            produto: params.getParam('produto', ParamType.JSON),
+          ),
+        ),
+        FFRoute(
+          name: 'TelaHomeBackup',
+          path: '/telaHomeBackup',
+          builder: (context, params) => TelaHomeBackupWidget(
+            ferramentas:
+                params.getParam<String>('ferramentas', ParamType.String, true),
+          ),
+        ),
+        FFRoute(
+          name: 'GestaoMateriais',
+          path: '/gestaoMateriais',
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'GestaoMateriais')
+              : GestaoMateriaisWidget(),
+        ),
+        FFRoute(
+          name: 'CadastroGestao',
+          path: '/cadastroGestao',
+          builder: (context, params) => CadastroGestaoWidget(),
+        ),
+        FFRoute(
+          name: 'ListaMateriais',
+          path: '/listaMateriais',
+          builder: (context, params) => ListaMateriaisWidget(
+            gestaoId: params.getParam('gestaoId', ParamType.int),
+          ),
+        ),
+        FFRoute(
+          name: 'Fornecedores',
+          path: '/fornecedores',
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'Fornecedores')
+              : FornecedoresWidget(),
+        ),
+        FFRoute(
+          name: 'CadastroMaterial',
+          path: '/cadastroMaterial',
+          builder: (context, params) => CadastroMaterialWidget(),
+        ),
+        FFRoute(
+          name: 'Perfil',
+          path: '/perfil',
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'Perfil')
+              : PerfilWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -252,4 +311,24 @@ class TransitionInfo {
   final Alignment? alignment;
 
   static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
+}
+
+class RootPageContext {
+  const RootPageContext(this.isRootPage, [this.errorRoute]);
+  final bool isRootPage;
+  final String? errorRoute;
+
+  static bool isInactiveRootPage(BuildContext context) {
+    final rootPageContext = context.read<RootPageContext?>();
+    final isRootPage = rootPageContext?.isRootPage ?? false;
+    final location = GoRouter.of(context).location;
+    return isRootPage &&
+        location != '/' &&
+        location != rootPageContext?.errorRoute;
+  }
+
+  static Widget wrap(Widget child, {String? errorRoute}) => Provider.value(
+        value: RootPageContext(true, errorRoute),
+        child: child,
+      );
 }

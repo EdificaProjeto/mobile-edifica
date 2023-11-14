@@ -5,7 +5,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'login_model.dart';
@@ -29,7 +28,12 @@ class _LoginWidgetState extends State<LoginWidget> {
     _model = createModel(context, () => LoginModel());
 
     _model.campoEmailController ??= TextEditingController();
+    _model.campoEmailFocusNode ??= FocusNode();
+
     _model.campoSenhaController ??= TextEditingController();
+    _model.campoSenhaFocusNode ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -41,8 +45,21 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
+    context.watch<FFAppState>();
+
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFEF6C09),
@@ -98,10 +115,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                           context: context,
                           desktop: false,
                         ))
-                          Flexible(
+                          Expanded(
                             child: Container(
                               width: 100.0,
-                              height: 1140.0,
                               decoration: BoxDecoration(
                                 color: Color(0xFFEF6C09),
                               ),
@@ -163,6 +179,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         24.0, 40.0, 24.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.campoEmailController,
+                                      focusNode: _model.campoEmailFocusNode,
                                       onChanged: (_) => EasyDebounce.debounce(
                                         '_model.campoEmailController',
                                         Duration(milliseconds: 100),
@@ -261,6 +278,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                         24.0, 0.0, 24.0, 0.0),
                                     child: TextFormField(
                                       controller: _model.campoSenhaController,
+                                      focusNode: _model.campoSenhaFocusNode,
                                       onChanged: (_) => EasyDebounce.debounce(
                                         '_model.campoSenhaController',
                                         Duration(milliseconds: 100),
@@ -476,52 +494,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                                   width: 0.0,
                                 ),
                               ),
-                              child: Visibility(
-                                visible: responsiveVisibility(
-                                  context: context,
-                                  desktop: false,
-                                ),
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.00, 0.00),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 10.0),
-                                    child: FFButtonWidget(
-                                      onPressed: () {
-                                        print('btnGoogle pressed ...');
-                                      },
-                                      text: 'Continuar com Google',
-                                      icon: FaIcon(
-                                        FontAwesomeIcons.google,
-                                        color:
-                                            FlutterFlowTheme.of(context).error,
-                                      ),
-                                      options: FFButtonOptions(
-                                        width: 280.0,
-                                        height: 50.0,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 0.0, 0.0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
-                                        color: Colors.white,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .override(
-                                              fontFamily: 'Readex Pro',
-                                              color: Colors.black,
-                                            ),
-                                        elevation: 3.0,
-                                        borderSide: BorderSide(
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
                         if (responsiveVisibility(
@@ -538,53 +510,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 border: Border.all(
                                   color: FlutterFlowTheme.of(context).info,
                                   width: 0.0,
-                                ),
-                              ),
-                              child: Visibility(
-                                visible: responsiveVisibility(
-                                  context: context,
-                                  tablet: false,
-                                  tabletLandscape: false,
-                                  desktop: false,
-                                ),
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.00, -1.00),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 10.0),
-                                    child: FFButtonWidget(
-                                      onPressed: () {
-                                        print('btnFacebook pressed ...');
-                                      },
-                                      text: 'Continuar com Facebook',
-                                      icon: FaIcon(
-                                        FontAwesomeIcons.facebook,
-                                        color: Color(0xFF3B5998),
-                                      ),
-                                      options: FFButtonOptions(
-                                        width: 280.0,
-                                        height: 50.0,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 0.0, 0.0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
-                                        color: Colors.white,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .override(
-                                              fontFamily: 'Readex Pro',
-                                              color: Colors.black,
-                                            ),
-                                        elevation: 3.0,
-                                        borderSide: BorderSide(
-                                          width: 1.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                    ),
-                                  ),
                                 ),
                               ),
                             ),

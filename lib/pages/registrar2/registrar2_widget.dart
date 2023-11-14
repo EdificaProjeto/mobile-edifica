@@ -28,9 +28,18 @@ class _Registrar2WidgetState extends State<Registrar2Widget> {
     _model = createModel(context, () => Registrar2Model());
 
     _model.campoNomeController ??= TextEditingController();
+    _model.campoNomeFocusNode ??= FocusNode();
+
     _model.campoEmailController ??= TextEditingController();
+    _model.campoEmailFocusNode ??= FocusNode();
+
     _model.campoSenhaController ??= TextEditingController();
+    _model.campoSenhaFocusNode ??= FocusNode();
+
     _model.campoConfSenhaController ??= TextEditingController();
+    _model.campoConfSenhaFocusNode ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -42,8 +51,21 @@ class _Registrar2WidgetState extends State<Registrar2Widget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
+    context.watch<FFAppState>();
+
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFEF6C09),
@@ -150,6 +172,7 @@ class _Registrar2WidgetState extends State<Registrar2Widget> {
                                   24.0, 40.0, 24.0, 10.0),
                               child: TextFormField(
                                 controller: _model.campoNomeController,
+                                focusNode: _model.campoNomeFocusNode,
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.campoNomeController',
                                   Duration(milliseconds: 2000),
@@ -239,6 +262,7 @@ class _Registrar2WidgetState extends State<Registrar2Widget> {
                                   24.0, 30.0, 24.0, 10.0),
                               child: TextFormField(
                                 controller: _model.campoEmailController,
+                                focusNode: _model.campoEmailFocusNode,
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.campoEmailController',
                                   Duration(milliseconds: 2000),
@@ -329,6 +353,7 @@ class _Registrar2WidgetState extends State<Registrar2Widget> {
                                   24.0, 25.0, 24.0, 10.0),
                               child: TextFormField(
                                 controller: _model.campoSenhaController,
+                                focusNode: _model.campoSenhaFocusNode,
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.campoSenhaController',
                                   Duration(milliseconds: 2000),
@@ -422,6 +447,7 @@ class _Registrar2WidgetState extends State<Registrar2Widget> {
                                   24.0, 25.0, 24.0, 10.0),
                               child: TextFormField(
                                 controller: _model.campoConfSenhaController,
+                                focusNode: _model.campoConfSenhaFocusNode,
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.campoConfSenhaController',
                                   Duration(milliseconds: 2000),

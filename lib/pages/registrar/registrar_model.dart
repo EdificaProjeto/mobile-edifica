@@ -3,18 +3,20 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'registrar_widget.dart' show RegistrarWidget;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class RegistrarModel extends FlutterFlowModel {
+class RegistrarModel extends FlutterFlowModel<RegistrarWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   // State field(s) for campoNome widget.
+  FocusNode? campoNomeFocusNode;
   TextEditingController? campoNomeController;
   String? Function(BuildContext, String?)? campoNomeControllerValidator;
   String? _campoNomeControllerValidator(BuildContext context, String? val) {
@@ -29,6 +31,7 @@ class RegistrarModel extends FlutterFlowModel {
   }
 
   // State field(s) for campoEmail widget.
+  FocusNode? campoEmailFocusNode;
   TextEditingController? campoEmailController;
   String? Function(BuildContext, String?)? campoEmailControllerValidator;
   String? _campoEmailControllerValidator(BuildContext context, String? val) {
@@ -43,6 +46,7 @@ class RegistrarModel extends FlutterFlowModel {
   }
 
   // State field(s) for campoSenha widget.
+  FocusNode? campoSenhaFocusNode;
   TextEditingController? campoSenhaController;
   late bool campoSenhaVisibility;
   String? Function(BuildContext, String?)? campoSenhaControllerValidator;
@@ -59,6 +63,7 @@ class RegistrarModel extends FlutterFlowModel {
   }
 
   // State field(s) for campoConfSenha widget.
+  FocusNode? campoConfSenhaFocusNode;
   TextEditingController? campoConfSenhaController;
   late bool campoConfSenhaVisibility;
   String? Function(BuildContext, String?)? campoConfSenhaControllerValidator;
@@ -91,9 +96,16 @@ class RegistrarModel extends FlutterFlowModel {
 
   void dispose() {
     unfocusNode.dispose();
+    campoNomeFocusNode?.dispose();
     campoNomeController?.dispose();
+
+    campoEmailFocusNode?.dispose();
     campoEmailController?.dispose();
+
+    campoSenhaFocusNode?.dispose();
     campoSenhaController?.dispose();
+
+    campoConfSenhaFocusNode?.dispose();
     campoConfSenhaController?.dispose();
   }
 
